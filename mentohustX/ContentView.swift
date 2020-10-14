@@ -43,3 +43,7 @@ struct PassWord:View {
         }
     }
 }
+
+struct <#name#> {
+    <#fields#>
+}
