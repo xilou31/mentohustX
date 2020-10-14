@@ -11,10 +11,36 @@ import ShellOut
 
 struct ContentView: View {
     var body: some View {
-        VStack{
-            UserName()
-            PassWord()
-            NetWorkInterfaceCard()
+        GeometryReader{geometry in
+            VStack{
+                GeometryReader{geometry in
+                    HStack{
+                        UserName()
+                            .frame(width: (geometry.size.width)*0.75, height: 100, alignment: .center)
+                        Line1XConnect()
+                            .frame(width: (geometry.size.width)*0.20, height: 100, alignment: .center)
+                        Spacer()
+                            .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    }
+                }
+                PassWord()
+                NetWorkInterfaceCard()
+                GeometryReader{geometry in
+                    HStack{
+                        SavePassWord()
+                        Spacer()
+                            .frame(width: geometry.size.width/2, height: 100, alignment: .center)
+                        AutoConnnect()
+                    }
+                }
+                GeometryReader { geometry in
+                    HStack{
+                        Connect()
+                        Spacer().frame(width: geometry.size.width/2, height: 100, alignment: .center)
+                        DisConnect()
+                    }
+                }
+            }
         }
     }
 }
@@ -29,9 +55,13 @@ struct ContentView_Previews: PreviewProvider {
 struct UserName:View {
     @State private var userName:String = ""
     var body: some View{
-        HStack{
-            Text(verbatim: "用户名")
-            TextField("请输入用户名", text: $userName)
+        GeometryReader{geometry in
+            HStack{
+                Text("用户名")
+                    .frame(width: (geometry.size.width)*0.2, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                TextField("请输入用户名", text: $userName)
+                    .frame(width: (geometry.size.width)*0.8, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            }
         }
     }
 }
@@ -39,20 +69,41 @@ struct UserName:View {
 struct PassWord:View {
     @State private var passWord:String = ""
     var body: some View{
-        HStack{
-            Text(verbatim: "密码")
-            SecureField("请输入密码",text:$passWord)
+        GeometryReader{geometry in
+            HStack{
+                Text("密码")
+                    .frame(width: (geometry.size.width)*0.15, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                SecureField("请输入密码", text:$passWord)
+                    .frame(width: (geometry.size.width)*0.80, height: 100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center)
+                Spacer()
+                    .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            }
         }
     }
 }
 
-struct NetWorkInterfaceCard:View {
-    @State private var selectedCardTag:Int = 1
+struct Line1XConnect:View {
+    @State private var isLine1xConnect:Bool = true
     var body: some View{
-        Picker(selection: $selectedCardTag, label:Text(verbatim: "网卡"), content: {
-            Text("1").tag(1)
-            Text("2").tag(2)
-        })
+        Toggle(isOn: $isLine1xConnect) {
+            Text("有线1x连接")
+        }.toggleStyle(SwitchToggleStyle())
+    }
+}
+
+struct NetWorkInterfaceCard:View {
+    @State private var selectedInterfaceTag = 1
+    var body: some View{
+        GeometryReader { geometry in
+            HStack{
+                Picker(selection: $selectedInterfaceTag, label: Text("网卡").frame(width: (geometry.size.width)*0.15, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/), content: {
+                    Text("1").tag(1)
+                    Text("2").tag(2)
+                }).frame(width: (geometry.size.width)*0.95, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                Spacer()
+                    .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            }
+        }
     }
 }
 
@@ -85,5 +136,23 @@ struct DisConnect:View {
         Button(action: disConnect, label:{
             Text("断开连接")
         })
+    }
+}
+
+struct SavePassWord:View {
+    @State private var isSavePassword:Bool = true
+    var body: some View{
+        Toggle(isOn:$isSavePassword, label: {
+            Text("保存密码")
+        }).toggleStyle(SwitchToggleStyle())
+    }
+}
+
+struct AutoConnnect:View {
+    @State private var isAutoConnect:Bool = true
+    var body: some View{
+        Toggle(isOn: $isAutoConnect, label: {
+            Text("自动认证")
+        }).toggleStyle(SwitchToggleStyle())
     }
 }
