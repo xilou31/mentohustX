@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Cocoa
+import ShellOut
 
 struct ContentView: View {
     var body: some View {
@@ -51,6 +52,38 @@ struct NetWorkInterfaceCard:View {
         Picker(selection: $selectedCardTag, label:Text(verbatim: "网卡"), content: {
             Text("1").tag(1)
             Text("2").tag(2)
+        })
+    }
+}
+
+struct Connect : View {
+    func connect() -> Void{
+        do{
+            let output = try shellOut(to: "./mentohust",at: "/usr/local/sbin")
+            print(output) // Hello world
+        }catch{
+            print(error)
+        }
+    }
+    var body: some View{
+        Button(action:connect, label: {
+            Text("连接")
+        })
+    }
+}
+
+struct DisConnect:View {
+    func disConnect() -> Void {
+        do{
+            let output = try shellOut(to: "./mentohust",arguments: ["-k"],at: "/usr/local/sbin")
+            print(output)
+        }catch{
+            print(error)
+        }
+    }
+    var body: some View{
+        Button(action: disConnect, label:{
+            Text("断开连接")
         })
     }
 }
