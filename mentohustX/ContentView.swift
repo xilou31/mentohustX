@@ -13,6 +13,7 @@ struct ContentView: View {
         VStack{
             UserName()
             PassWord()
+            NetWorkInterfaceCard()
         }
     }
 }
@@ -44,6 +45,12 @@ struct PassWord:View {
     }
 }
 
-struct <#name#> {
-    <#fields#>
+struct NetWorkInterfaceCard:View {
+    @State private var selectedCardTag:Int = 1
+    var body: some View{
+        Picker(selection: $selectedCardTag, label:Text(verbatim: "网卡"), content: {
+            Text("1").tag(1)
+            Text("2").tag(2)
+        })
+    }
 }
