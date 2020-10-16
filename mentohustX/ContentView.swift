@@ -10,32 +10,39 @@ import Cocoa
 import ShellOut
 
 struct ContentView: View {
+    @State private var userName:String = ""
+    @State private var passWord:String = ""
+    @State private var selectedNicTag:Int = 1
+    @State private var isLine1xConnect:Bool = true
+    @State private var isSavePassword:Bool = true
+    @State private var isAutoConnect:Bool = true
+    let nicList = getInterfaceNames()
     var body: some View {
         GeometryReader{geometry in
             VStack{
                 GeometryReader{geometry in
                     HStack{
-                        UserName()
+                        UserName(userName: $userName)
                             .frame(width: (geometry.size.width)*0.75, height: 100, alignment: .center)
-                        Line1XConnect()
+                        Line1XConnect(isLine1xConnect : $isLine1xConnect)
                             .frame(width: (geometry.size.width)*0.20, height: 100, alignment: .center)
                         Spacer()
-                            .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: .center)
+                            .frame(width: (geometry.size.width)*0.05, height: 100, alignment: .center)
                     }
                 }
-                PassWord()
-                NetWorkInterfaceCard()
+                PassWord(passWord: $passWord)
+                NetWorkInterfaceCard(nicList: nicList, selectedInterfaceTag: $selectedNicTag)
                 GeometryReader{geometry in
                     HStack{
-                        SavePassWord()
+                        SavePassWord(isSavePassword: $isSavePassword)
                         Spacer()
                             .frame(width: geometry.size.width/2, height: 100, alignment: .center)
-                        AutoConnnect()
+                        AutoConnnect(isAutoConnect: $isAutoConnect)
                     }
                 }
                 GeometryReader { geometry in
                     HStack{
-                        Connect()
+                        Connect(userName: $userName, passWord: $passWord, selectedNicTag: $selectedNicTag, nicList: nicList)
                         Spacer()
                             .frame(width: geometry.size.width/2, height: 100, alignment: .center)
                         DisConnect()
@@ -54,7 +61,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct UserName:View {
-    @State public var userName:String = ""
+    @Binding public var userName:String
     var body: some View{
         GeometryReader{geometry in
             HStack{
@@ -68,7 +75,7 @@ struct UserName:View {
 }
 
 struct PassWord:View {
-    @State public var passWord:String = ""
+    @Binding public var passWord:String
     var body: some View{
         GeometryReader{geometry in
             HStack{
@@ -84,7 +91,7 @@ struct PassWord:View {
 }
 
 struct Line1XConnect:View {
-    @State private var isLine1xConnect:Bool = true
+    @Binding public var isLine1xConnect:Bool
     var body: some View{
         Toggle(isOn: $isLine1xConnect) {
             Text("有线1x连接")
@@ -93,8 +100,8 @@ struct Line1XConnect:View {
 }
 
 struct NetWorkInterfaceCard:View {
-    var nicList = getInterfaceNames()
-    @State private var selectedInterfaceTag = 1
+    var nicList:[String]
+    @Binding public var selectedInterfaceTag:Int
     var body: some View{
         GeometryReader { geometry in
             HStack{
@@ -102,7 +109,7 @@ struct NetWorkInterfaceCard:View {
                     ForEach(nicList.indices){index in
                         Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
                             Text(nicList[index])
-                        })
+                        }).tag(index)
                     }
                 }).frame(width: (geometry.size.width)*0.95, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 Spacer()
@@ -113,7 +120,13 @@ struct NetWorkInterfaceCard:View {
 }
 
 struct Connect : View {
+    @Binding public var userName:String
+    @Binding public var passWord:String
+    @Binding public var selectedNicTag:Int
+    let nicList:[String]
     func connect() -> Void{
+        let mentohustConf = MentohustConf(Username: userName, Password: passWord, Nic: nicList[selectedNicTag])
+        mentohustConf.printConf()
         do{
             let output = try shellOut(to: "./mentohust",at: "/usr/local/sbin")
             print(output)
@@ -145,7 +158,7 @@ struct DisConnect:View {
 }
 
 struct SavePassWord:View {
-    @State private var isSavePassword:Bool = true
+    @Binding public var isSavePassword:Bool
     var body: some View{
         Toggle(isOn:$isSavePassword, label: {
             Text("保存密码")
@@ -154,7 +167,7 @@ struct SavePassWord:View {
 }
 
 struct AutoConnnect:View {
-    @State private var isAutoConnect:Bool = true
+    @Binding public var isAutoConnect:Bool
     var body: some View{
         Toggle(isOn: $isAutoConnect, label: {
             Text("自动认证")

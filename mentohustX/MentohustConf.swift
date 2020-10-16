@@ -60,12 +60,54 @@ struct MentohustConf {
     
     func writeToConfFile(){
         let filePath:String = NSHomeDirectory() + "/etc/mentohust.conf"
-        let conf:String = "Username = \(Username)"+"Password = \(Password)"+"Nic = \(Nic)"+"IP = \(IP)"+"Mask = \(Mask)"+"Gateway = \(Gateway)"+"DNS = \(DNS)"+"PingHost = \(PingHost)"+"TimeOut = \(Timeout)"+"EchoInterval = \(EchoInterval)"+"RestartWait = \(RestartWait)"+"MaxFail = \(MaxFail)"+"StartMode = \(StartMode)"+"DhcpMode = \(DhcpMode)"+"DaemonMode = \(DaemonMode)"+"Version = \(Version)"+"DataFile = \(DataFile)"+"DhcpScript = \(DhcpScript)"
+        let conf:String = """
+            
+            [MentoHUST]
+            Username=\(Username)
+            Password=\(Password)
+            Nic=\(Nic)
+            IP=\(IP)
+            Mask=\(Mask)
+            Gateway=\(Gateway)
+            DNS=\(DNS)
+            PingHost=\(PingHost)
+            TimeOut=\(Timeout)
+            EchoInterval=\(EchoInterval)
+            RestartWait=\(RestartWait)
+            MaxFail=\(MaxFail)
+            StartMode=\(StartMode)
+            DhcpMode=\(DhcpMode)
+            DaemonMode=\(DaemonMode)
+            Version=\(Version)
+            DataFile=\(DataFile)
+            DhcpScript=\(DhcpScript)
+        """
         try! conf.write(toFile: filePath, atomically: true, encoding: String.Encoding.utf8)
     }
     
     func printConf() {
-        let conf:String = "Username = \(Username)"+"Password = \(Password)"+"Nic = \(Nic)"+"IP = \(IP)"+"Mask = \(Mask)"+"Gateway = \(Gateway)"+"DNS = \(DNS)"+"PingHost = \(PingHost)"+"TimeOut = \(Timeout)"+"EchoInterval = \(EchoInterval)"+"RestartWait = \(RestartWait)"+"MaxFail = \(MaxFail)"+"StartMode = \(StartMode)"+"DhcpMode = \(DhcpMode)"+"DaemonMode = \(DaemonMode)"+"Version = \(Version)"+"DataFile = \(DataFile)"+"DhcpScript = \(DhcpScript)"
+        let conf:String = """
+            
+            [MentoHUST]
+            Username=\(Username)
+            Password=\(Password)
+            Nic=\(Nic)
+            IP=\(IP)
+            Mask=\(Mask)
+            Gateway=\(Gateway)
+            DNS=\(DNS)
+            PingHost=\(PingHost)
+            TimeOut=\(Timeout)
+            EchoInterval=\(EchoInterval)
+            RestartWait=\(RestartWait)
+            MaxFail=\(MaxFail)
+            StartMode=\(StartMode)
+            DhcpMode=\(DhcpMode)
+            DaemonMode=\(DaemonMode)
+            Version=\(Version)
+            DataFile=\(DataFile)
+            DhcpScript=\(DhcpScript)
+        """
         print(conf)
     }
 }
