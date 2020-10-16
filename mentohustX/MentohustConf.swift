@@ -24,7 +24,7 @@ struct MentohustConf {
     var DhcpMode:String = ""
     var DaemonMode:String = ""
     var Version:String = "0.00"
-    var DataFile:String = "/etc/mentohust"
+    var DataFile:String = "/etc/mentohust.conf"
     var DhcpScript:String = "dhclient"
     
     init() {

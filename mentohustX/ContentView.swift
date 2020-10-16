@@ -128,7 +128,7 @@ struct Connect : View {
         let mentohustConf = MentohustConf(Username: userName, Password: passWord, Nic: nicList[selectedNicTag])
         mentohustConf.printConf()
         do{
-            let output = try shellOut(to: "./mentohust",at: "/usr/local/sbin")
+            let output = try shellOut(to: "./mentohust",at: "/usr/local/bin")
             print(output)
         }catch{
             print(error)
