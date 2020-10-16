@@ -20,7 +20,7 @@ struct ContentView: View {
                         Line1XConnect()
                             .frame(width: (geometry.size.width)*0.20, height: 100, alignment: .center)
                         Spacer()
-                            .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: .center)
                     }
                 }
                 PassWord()
@@ -36,7 +36,8 @@ struct ContentView: View {
                 GeometryReader { geometry in
                     HStack{
                         Connect()
-                        Spacer().frame(width: geometry.size.width/2, height: 100, alignment: .center)
+                        Spacer()
+                            .frame(width: geometry.size.width/2, height: 100, alignment: .center)
                         DisConnect()
                     }
                 }
@@ -58,9 +59,9 @@ struct UserName:View {
         GeometryReader{geometry in
             HStack{
                 Text("用户名")
-                    .frame(width: (geometry.size.width)*0.2, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .frame(width: (geometry.size.width)*0.2, height: 100, alignment: .center)
                 TextField("请输入用户名", text: $userName)
-                    .frame(width: (geometry.size.width)*0.8, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .frame(width: (geometry.size.width)*0.8, height: 100, alignment: .center)
             }
         }
     }
@@ -72,11 +73,11 @@ struct PassWord:View {
         GeometryReader{geometry in
             HStack{
                 Text("密码")
-                    .frame(width: (geometry.size.width)*0.15, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .frame(width: (geometry.size.width)*0.15, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: .center)
                 SecureField("请输入密码", text:$passWord)
-                    .frame(width: (geometry.size.width)*0.80, height: 100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center)
+                    .frame(width: (geometry.size.width)*0.80, height: 100, alignment: .center)
                 Spacer()
-                    .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: .center)
             }
         }
     }
@@ -92,13 +93,17 @@ struct Line1XConnect:View {
 }
 
 struct NetWorkInterfaceCard:View {
+    var nicList = getInterfaceNames()
     @State private var selectedInterfaceTag = 1
     var body: some View{
         GeometryReader { geometry in
             HStack{
                 Picker(selection: $selectedInterfaceTag, label: Text("网卡").frame(width: (geometry.size.width)*0.15, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/), content: {
-                    Text("1").tag(1)
-                    Text("2").tag(2)
+                    ForEach(nicList.indices){index in
+                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                            Text(nicList[index])
+                        })
+                    }
                 }).frame(width: (geometry.size.width)*0.95, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 Spacer()
                     .frame(width: (geometry.size.width)*0.05, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -155,4 +160,25 @@ struct AutoConnnect:View {
             Text("自动认证")
         }).toggleStyle(SwitchToggleStyle())
     }
+}
+
+func getInterfaceNames() -> [String] {
+    
+    var names = [String]()
+    
+    // Get list of all interfaces on the local machine:
+    var ifaddr : UnsafeMutablePointer<ifaddrs>?
+    guard getifaddrs(&ifaddr) == 0 else { return [] }
+    guard let firstAddr = ifaddr else { return [] }
+    
+    // For each interface ...
+    for ptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
+        let addr = ptr.pointee.ifa_addr.pointee
+        if addr.sa_family == UInt8(AF_LINK){
+            let name = String(cString: ptr.pointee.ifa_name)
+            names.append(name)
+        }
+    }
+    
+    return names
 }
