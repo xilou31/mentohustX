@@ -54,7 +54,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct UserName:View {
-    @State private var userName:String = ""
+    @State public var userName:String = ""
     var body: some View{
         GeometryReader{geometry in
             HStack{
@@ -68,7 +68,7 @@ struct UserName:View {
 }
 
 struct PassWord:View {
-    @State private var passWord:String = ""
+    @State public var passWord:String = ""
     var body: some View{
         GeometryReader{geometry in
             HStack{
@@ -116,7 +116,7 @@ struct Connect : View {
     func connect() -> Void{
         do{
             let output = try shellOut(to: "./mentohust",at: "/usr/local/sbin")
-            print(output) // Hello world
+            print(output)
         }catch{
             print(error)
         }
